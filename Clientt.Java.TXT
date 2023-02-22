@@ -1,0 +1,36 @@
+package system;
+import java.io.*;
+import java.net.*;
+import java.util.Scanner;
+
+public class Client {
+    public static void main(String[] args) {
+        try {
+            // Créer une socket client
+            Socket socket = new Socket("localhost", 8080);
+            System.out.println("Client adresse: " + socket.getLocalAddress() + ":" + socket.getLocalPort());
+            System.out.println("Serveur adresse: " + socket.getInetAddress() + ":" + socket.getPort());
+            // Créer des flux entrée et sortie
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            Scanner scanner = new Scanner(System.in);
+            // Lire les données du clavier
+            System.out.println("Entrez la chaine 1: ");
+            String str1 = scanner.nextLine();
+            System.out.println("Entrez la chaine 2: ");
+            String str2 = scanner.nextLine();
+            // Envoyer les données au serveur
+            out.writeUTF(str1);
+            out.writeUTF(str2);
+            // Recevoir la réponse du serveur
+            String response = in.readUTF();
+            System.out.println("Réponse du serveur: " + response);
+            String nbClients = in.readUTF();
+            System.out.println("Nombre de clients connectés: " + nbClients);
+            scanner.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

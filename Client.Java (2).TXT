@@ -1,0 +1,41 @@
+
+package system;
+
+import java.io.*; 
+import java.net.*; 
+
+public class Client { 
+	public static void main(String[] args) throws IOException { 
+		// Création des sockets et des flux d'entrée/sortie
+		Socket socket = new Socket("localhost", 8080); 
+		DataInputStream in = new DataInputStream(socket.getInputStream()); 
+		DataOutputStream out = new DataOutputStream(socket.getOutputStream()); 
+
+		// Affichage de l'adresse du client
+		System.out.println("Adresse client : " + socket.getLocalAddress() + ":" + socket.getLocalPort()); 
+
+		// Réception de l'adresse du serveur
+		String adresseServeur = in.readUTF(); 
+		System.out.println("Adresse serveur : " + adresseServeur); 
+
+		// Lecture des chaines envoyées
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); 
+		System.out.println("Entrez la chaine 1 : "); 
+		String chaine1 = reader.readLine(); 
+		System.out.println("Entrez la chaine 2 : "); 
+		String chaine2 = reader.readLine(); 
+		
+		// Envoi des chaines au serveur
+		out.writeUTF(chaine1); 
+		out.writeUTF(chaine2); 
+
+		// Réception de la réponse du serveur
+		String resultat = in.readUTF(); 
+		System.out.println("Résultat : " + resultat); 
+
+		// Fermeture des sockets et des flux 
+		in.close(); 
+		out.close(); 
+		socket.close(); 
+	} 
+} 

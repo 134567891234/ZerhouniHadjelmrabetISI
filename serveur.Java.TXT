@@ -1,0 +1,45 @@
+package system;
+
+import java.io.*; 
+import java.net.*; 
+
+public class Server { 
+	public static void main(String[] args) throws IOException { 
+		// Création de la socket et des flux d'entrée/sortie
+		ServerSocket serverSocket = new ServerSocket(8080); 
+		System.out.println("Le serveur est en attente de clients....");
+		Socket socket = serverSocket.accept(); 
+		DataInputStream in = new DataInputStream(socket.getInputStream()); 
+		DataOutputStream out = new DataOutputStream(socket.getOutputStream()); 
+		 
+		// Envoi de l'adresse du serveur
+		out.writeUTF(socket.getLocalAddress() + ":" + socket.getLocalPort()); 
+		
+		// Réception des chaines envoyées par le client
+		String chaine1 = in.readUTF(); 
+		String chaine2 = in.readUTF(); 
+		
+		// Traitement des chaines
+		String resultat = checkChaine(chaine1, chaine2); 
+		
+		// Envoi de la réponse du serveur
+		out.writeUTF(resultat); 
+		
+		// Fermeture des sockets et des flux 
+		in.close(); 
+		out.close(); 
+		socket.close(); 
+		serverSocket.close(); 
+	} 
+
+	// Méthode pour vérifier si chaine1 contient chaine2
+	public static String checkChaine(String chaine1, String chaine2) { 
+		if (chaine1.contains(chaine2)) { 
+			return chaine1 + " contient " + chaine2; 
+		} 
+		else { 
+			return chaine1 + " ne contient pas " + chaine2; 
+		} 
+	} 
+}
+

@@ -1,0 +1,44 @@
+package system;
+import java.io.*;
+import java.net.*;
+import java.util.Scanner;
+
+public class Client {
+
+    public static void main(String[] args) {
+
+        try {
+            // Create a socket to connect to the server
+            Socket socket = new Socket("localhost", 8080);
+            System.out.println("Connected to server on " + socket.getLocalAddress().getHostAddress() +
+                    ":" + socket.getLocalPort());
+
+            // Create streams for sending and receiving data
+            PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+            InputStreamReader input = new InputStreamReader(socket.getInputStream());
+            BufferedReader reader = new BufferedReader(input);
+
+            // Get the strings for comparison
+            Scanner scan = new Scanner(System.in);
+            System.out.println("Enter the first string: ");
+            String chaine1 = scan.nextLine();
+            System.out.println("Enter the second string: ");
+            String chaine2 = scan.nextLine();
+
+            // Send the data to the server
+            output.println(chaine1);
+            output.println(chaine2);
+
+            // Receive the response from the server
+            String response = reader.readLine();
+            System.out.println("Server response: " + response);
+
+            // Close the connection
+            socket.close();
+            System.out.println("Connection closed");
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
